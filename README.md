@@ -24,5 +24,5 @@
 3. Run `ssh -i id_rsa azureuser@<public_ip_address>` using the actual ip address obtained in the previous step
 4. you should now be logged in to the virtual machine
 
-# Destroyinh the full environment including the vm 
+# Destroying the full environment including the vm 
 * if need be you can use `terraform destroy` to destroy the full environment and the vm
