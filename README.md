@@ -3,7 +3,7 @@
 * Follow the instructions on one of the websites to install terraform
   * [How to install terraform in Windows with Bash](https://docs.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash)
   * [How to install terraform in Windows with Powershell](https://docs.microsoft.com/en-us/azure/developer/terraform/get-started-windows-powershell?tabs=bash)
-  * Change the following variables in providers.tf to your azure account and principal
+  * Change the following variables in `providers.tf` to your azure account and principal
     * `subscription_id`
     * `tenant_id`
     * `client_id`
