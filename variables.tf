@@ -7,3 +7,31 @@ variable "resource_group_location" {
   default       = "centralus"
   description   = "Location of the resource group."
 }
+
+variable "vm_size" {
+  default       = "Standard_B2S"
+  description   = "size of the vm"
+}
+
+variable "vm_name" {
+  default       = "MyVM"
+  description   = "Name of the virtual machine"
+}
+
+variable "image_publisher" {
+  default       = "Canonical"
+  description   = "Name of the image publisher"
+}
+variable "image_offer" {
+  default       = "UbuntuServer"
+  description   = "Name of the Image offer"
+}
+variable "image_sku" {
+  default       = "18.04-LTS"
+  description   = "Image sku"
+}
+
+variable "image_version" {
+  default       = "latest"
+  description   = "image version"
+}

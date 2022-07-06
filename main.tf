@@ -108,12 +108,12 @@ resource "random_password" "linux-vm-password" {
 
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "myterraformvm" {
-  name                  = "myVM"
+  name                  = var.vm_name
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.myterraformnic.id]
-  size                  = "Standard_D2as_v5"
-
+  #size                  = "Standard_D2as_v5"
+  size                  = var.vm_size
   os_disk {
     name                 = "myOsDisk"
     caching              = "ReadWrite"
@@ -121,10 +121,10 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   } 
 
   computer_name                   = "MyCustomeVM"

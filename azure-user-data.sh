@@ -6,16 +6,7 @@ sudo apt-get install scala -y
 sudo apt-get install nodejs npm -y
 sudo apt-get install postgresql postgresql-contrib -y
 sudo systemctl start postgresql.service 
-#============= START spark===============
-sudo apt-get install git -y
-wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
-tar xvf spark-*
-sudo mv spark-3.2.1-bin-hadoop3.2 /opt/spark
-rm spark-3.2.1-bin-hadoop3.2.tgz
-echo "export SPARK_HOME=/opt/spark" >> ~/.profile
-echo "export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin" >> ~/.profile
-echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
-#============= END spark===============
+
 
 #==============START jupyter =======================
 sudo apt-get install python3-venv -y
@@ -77,7 +68,7 @@ sudo echo "  location /jupyter/ {
     # NOTE important to also set base url of jupyterhub to /jupyter in its config
     proxy_pass http://127.0.0.1:8000;
 
-    proxy_redirect   off;
+    proxy_redirect   off; 
     proxy_set_header X-Real-IP \$remote_addr;
     proxy_set_header Host \$host;
     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -94,8 +85,15 @@ sudo echo "  location /jupyter/ {
 sudo systemctl restart nginx.service
 #==============END jupyter =======================
 
-sudo apt-get install apache2 -y
-sudo systemctl start apache2
-sudo systemctl enable apache2
-echo "<h1>Azure Virtual Machine deployed with Terraform by Amaan Usmani</h1>" | sudo tee /var/www/html/index.html
+#============= START spark===============
+#following https://phoenixnap.com/kb/install-spark-on-ubuntu
+sudo apt-get install git -y
+wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
+tar xvf spark-*
+sudo mv spark-3.2.1-bin-hadoop3.2 /opt/spark
+rm spa rk-3.2.1-bin-hadoop3.2.tgz
+echo "export SPARK_HOME=/opt/spark" >> ~/.profile
+echo "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" >> ~/.profile
+echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
 
+#============= END spark===============
