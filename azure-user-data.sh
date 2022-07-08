@@ -7,6 +7,30 @@ sudo apt-get install nodejs npm -y
 sudo apt-get install postgresql postgresql-contrib -y
 sudo systemctl start postgresql.service 
 
+echo "============= START spark==============="
+#following https://phoenixnap.com/kb/install-spark-on-ubuntu
+sudo apt-get install git -y
+wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
+tar xvf spark-*
+sudo mv spark-3.2.1-bin-hadoop3.2 /opt/spark
+rm spark-3.2.1-bin-hadoop3.2.tgz
+echo "export SPARK_HOME=/opt/spark" >> ~/.profile
+echo "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" >> ~/.profile
+echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
+export SPARK_HOME=/opt/spark
+export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+export PYSPARK_PYTHON=/usr/bin/python3
+sudo mkdir /opt/spark/logs
+sudo chmod 777 /opt/spark/logs
+start-master.sh
+sudo mkdir /opt/spark/work
+sudo chmod 777 /opt/spark/work
+
+echo "============================== TF_VAR_vm_name=<$TF_VAR_vm_name>"
+#url must match computer_name
+start-slave.sh spark://mycustomevm:7077
+
+echo "============= END spark==============="
 
 #==============START jupyter =======================
 sudo apt-get install python3-venv -y
@@ -85,15 +109,4 @@ sudo echo "  location /jupyter/ {
 sudo systemctl restart nginx.service
 #==============END jupyter =======================
 
-#============= START spark===============
-#following https://phoenixnap.com/kb/install-spark-on-ubuntu
-sudo apt-get install git -y
-wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
-tar xvf spark-*
-sudo mv spark-3.2.1-bin-hadoop3.2 /opt/spark
-rm spa rk-3.2.1-bin-hadoop3.2.tgz
-echo "export SPARK_HOME=/opt/spark" >> ~/.profile
-echo "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" >> ~/.profile
-echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
 
-#============= END spark===============
