@@ -11,18 +11,24 @@
     
 # <center>How to run this terraform vm code
 
-1. make sure the command prompt is in the directory where the files are stored
+1. make sure your git bash is in the directory where the files are stored
    * use cd <*folder name*>
-2. Initialize terraform by running `terraform init`
-3. Run `terraform plan -out main.tfplan` to create an execution plan
-4. Run `terraform apply main.tfplan` to apply and create the vm in the cloud
+2. run ./start.sh to automatically start the creation process.
+  - the script is going to ask you to name the following variables, however it will show the default values in []: 
+    - vm name
+    - image publisher
+    - image offer 
+    - image SKU
+    - image version
+  - to use the default variables, press enter when prompted
+   
 
 # <center>How to Log in to the newly created vm
 
-1. Run `terraform output -raw tls_private_key > id_rsa` to create your SSH private key and save it to id_rsa
-2. Run `terraform output public_ip_address` to get the ip address of the vm
-3. Run `ssh -i id_rsa azureuser@<public_ip_address>` using the actual ip address obtained in the previous step
-4. you should now be logged in to the virtual machine
-
+1. Run `ssh -i id_rsa azureuser@<public_ip_address>` using the actual ip address obtained in the previous step
+2. you should now be logged in to the virtual machine
+3. the vm is going to come with a running Spark master and worker servers, the URL for the master server is http://<public ip address>:8080
+ 
+ 
 # Destroying the full environment including the vm 
-* if need be you can use `terraform destroy` to destroy the full environment and the vm
+* if need be you can run ./stop.sh which will permanently terminate your vm
