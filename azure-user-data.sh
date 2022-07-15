@@ -28,11 +28,13 @@ sudo chmod 777 /opt/spark/work
 
 echo "============================== TF_VAR_vm_name=<$TF_VAR_vm_name>"
 #url must match computer_name
-start-slave.sh spark://mycustomevm:7077
 
 echo "============= END spark==============="
 
 #==============START jupyter =======================
+#wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh
+#sudo bash Miniconda3-latest-Linux-x86_64.sh
+
 sudo apt-get install python3-venv -y
 sudo python3 -m venv /opt/jupyterhub/
 #upgrade nodejs to latest 
@@ -69,17 +71,22 @@ sudo systemctl enable jupyterhub.service
 sudo systemctl start jupyterhub.service
 sudo systemctl status jupyterhub.service
 
-#conda 
-sudo curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
-sudo install -o root -g root -m 644 conda.gpg /etc/apt/trusted.gpg.d/
-echo "deb [arch=amd64] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" | sudo tee /etc/apt/sources.list.d/conda.list
-sudo apt-get install conda -y 
-sudo ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-sudo mkdir /opt/conda/envs/
-sudo /opt/conda/bin/conda create --prefix /opt/conda/envs/python python=3.7 ipykernel
-sudo /opt/conda/envs/python/bin/python -m ipykernel install --prefix=/opt/jupyterhub/ --name 'python' --display-name "Python (default)"
-/path/to/kernel/env/bin/python -m ipykernel install --user --name 'python-my-env' --display-name "Python My Env"
+#miniconda
+echo "===================MINICONDA START================="
+sudo mkdir -p /opt/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /opt/miniconda3/miniconda.sh
+sudo bash /opt/miniconda3/miniconda.sh -b -u -p /opt/miniconda3
+sudo rm -rf /opt/miniconda3/miniconda.sh
+sudo /opt/miniconda3/bin/conda init bash
+sudo /opt/miniconda3/bin/conda init zsh
 
+sudo ln -s /opt/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+sudo /opt/miniconda3/bin/conda create --prefix /opt/miniconda3/envs/python python=3.7 ipykernel -y
+sudo /opt/miniconda3/envs/python/bin/python -m ipykernel install --prefix=/opt/jupyterhub/ --name 'python' --display-name "Python (default)"
+sudo /opt/miniconda3/envs/python/bin/python -m ipykernel install --prefix /usr/local/ --name 'python' --display-name "Python (default)"
+
+
+echo "===================MINICONDA DONE================="
 #reverse proxy
 sudo apt-get install nginx -y
 sudo echo "c.JupyterHub.bind_url = 'http://:8000/jupyter'" >> /opt/jupyterhub/etc/jupyterhub/jupyterhub_config.py
@@ -109,4 +116,7 @@ sudo echo "  location /jupyter/ {
 sudo systemctl restart nginx.service
 #==============END jupyter =======================
 
+#creating a test user
+echo testuser1:password2001::::/home/testuser1:/bin/bash | sudo newusers
+sudo usermode -aG sudo testuser1
 
