@@ -27,8 +27,9 @@
 
 1. Run `ssh -i id_rsa azureuser@<public_ip_address>` using the actual ip address obtained in the previous step
 2. you should now be logged in to the virtual machine
-3. the vm is going to come with a running Spark master and a Jupyter Miniconda server as well. the URL for the master server is http://<public ip address>:8080, while the URL for the Jupyter server is <public ip address>:8000
-4. the username is testuser1 and the password is password2001 
+3. the vm is going to come with a running Spark master . The URL for the master server is `http://< public ip address>:8080`
+3. the vm is also going to come with a running JupyterHub & Miniconda server. The URL for the JupyterHub server is `http://< public ip address>:8000`
+4. The VM has an additional test user with username `testuser1` and the password is `password2001`. This user also works in JupyterHub. 
 
  
  
