@@ -28,8 +28,15 @@
 1. Run `ssh -i id_rsa azureuser@<public_ip_address>` using the actual ip address obtained in the previous step
 2. you should now be logged in to the virtual machine
 3. the vm is going to come with a running Spark master . The URL for the master server is `http://< public ip address>:8080`
-3. the vm is also going to come with a running JupyterHub & Miniconda server. The URL for the JupyterHub server is `http://< public ip address>:8000`
-4. The VM has an additional test user with username `testuser1` and the password is `password2001`. This user also works in JupyterHub. 
+4. the vm is also going to come with a running JupyterHub & Miniconda server. The URL for the JupyterHub server is `http://< public ip address>:8000`
+5. The VM has an additional test user with username `testuser1` and the password is `password2001`. This user also works in JupyterHub. 
+
+# <center>How to Log in to the private vm
+1. log into the public vm using the steps above first 
+2. Run `ssh <admin_username>@<private_computer_name>` replace admin_username and private_computer_name with the
+names you chose
+3. you will be prompted for a password, enter the value that you chose for  `<admin_password>`  
+4. you should now be logged in to the private virtual machine
 
  
  
