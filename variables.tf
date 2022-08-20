@@ -17,6 +17,10 @@ variable "vm_name" {
   default       = "MyVM"
   description   = "Name of the virtual machine"
 }
+variable "private_vm_name" {
+  default       = "MyPrivateVM"
+  description   = "Name of the virtual machine"
+}
 
 variable "image_publisher" {
   default       = "Canonical"
@@ -34,4 +38,16 @@ variable "image_sku" {
 variable "image_version" {
   default       = "latest"
   description   = "image version"
+}
+variable "admin_username" {
+  default       = "azureuser1"
+  description   = "private vm username"
+}
+variable "admin_password" {
+  default       = "TestPassword1^"
+  description   = "private vm password"
+}
+variable "private_computer_name" {
+  default       = "MyPrivateComputerVM"
+  description   = "private vm computer name"
 }

@@ -10,10 +10,10 @@ sudo systemctl start postgresql.service
 echo "============= START spark==============="
 #following https://phoenixnap.com/kb/install-spark-on-ubuntu
 sudo apt-get install git -y
-wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
+wget https://dlcdn.apache.org/spark/spark-3.3.0/spark-3.3.0-bin-hadoop3.tgz
 tar xvf spark-*
-sudo mv spark-3.2.1-bin-hadoop3.2 /opt/spark
-rm spark-3.2.1-bin-hadoop3.2.tgz
+sudo mv spark-3.3.0-bin-hadoop3 /opt/spark
+rm spark-3.3.0-bin-hadoop3.tgz
 echo "export SPARK_HOME=/opt/spark" >> ~/.profile
 echo "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" >> ~/.profile
 echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
@@ -25,8 +25,8 @@ sudo chmod 777 /opt/spark/logs
 start-master.sh
 sudo mkdir /opt/spark/work
 sudo chmod 777 /opt/spark/work
+#start one slave server on port 7077
 
-echo "============================== TF_VAR_vm_name=<$TF_VAR_vm_name>"
 #url must match computer_name
 
 echo "============= END spark==============="
@@ -115,8 +115,12 @@ sudo echo "  location /jupyter/ {
   #restart nginx
 sudo systemctl restart nginx.service
 #==============END jupyter =======================
+echo "starting spark worker"
+vmname=`hostname`
+start-slave.sh spark://$vmname:7077
+echo "============================== TF_VAR_vm_name=<$TF_VAR_vm_name>"
 
-#creating a test user
+echo "creating a test user"
 echo testuser1:password2001::::/home/testuser1:/bin/bash | sudo newusers
 sudo usermode -aG sudo testuser1
 

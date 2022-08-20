@@ -22,6 +22,12 @@ resource "azurerm_subnet" "myterraformsubnet" {
   virtual_network_name = azurerm_virtual_network.myterraformnetwork.name
   address_prefixes     = ["10.0.1.0/24"]
 }
+resource "azurerm_subnet" "myprivateterraformsubnet" {
+  name                 = "myPrivateSubnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.myterraformnetwork.name
+  address_prefixes     = ["10.0.0.0/24"]
+}
 
 # Create public IPs
 resource "azurerm_public_ip" "myterraformpublicip" {
@@ -85,10 +91,25 @@ resource "azurerm_network_interface" "myterraformnic" {
     public_ip_address_id          = azurerm_public_ip.myterraformpublicip.id
   }
 }
+resource "azurerm_network_interface" "myprivateterraformnic" {
+  name                = "myPrivateNIC"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "myPrivateNicConfiguration"
+    subnet_id                     = azurerm_subnet.myprivateterraformsubnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "example" {
   network_interface_id      = azurerm_network_interface.myterraformnic.id
+  network_security_group_id = azurerm_network_security_group.myterraformnsg.id
+}
+resource "azurerm_network_interface_security_group_association" "private_example" {
+  network_interface_id      = azurerm_network_interface.myprivateterraformnic.id
   network_security_group_id = azurerm_network_security_group.myterraformnsg.id
 }
 
@@ -141,7 +162,7 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
-
+ 
   source_image_reference {
     publisher = var.image_publisher
     offer     = var.image_offer
@@ -159,6 +180,45 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
   
   admin_ssh_key {
     username   = "azureuser"
+    public_key = tls_private_key.example_ssh.public_key_openssh
+  }
+
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
+  }
+}
+
+#private vm 
+resource "azurerm_linux_virtual_machine" "myprivatevm" {
+  name                  = var.private_vm_name
+  location              = azurerm_resource_group.rg.location
+  resource_group_name   = azurerm_resource_group.rg.name
+  network_interface_ids = [azurerm_network_interface.myprivateterraformnic.id]
+  #size                  = "Standard_D2as_v5"
+  size                  = var.vm_size
+  os_disk {
+    name                 = "myPrivateOsDisk"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+ 
+  source_image_reference {
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
+  } 
+
+  computer_name                   = var.private_computer_name
+  admin_username                  = var.admin_username
+  #disable_password_authentication = true
+  admin_password = var.admin_password #random_password.linux-vm-password.result
+  #custom_data    = base64encode(data.template_file.linux-vm-cloud-init.rendered)
+  custom_data = filebase64("azure-userpriv-data.sh")
+  disable_password_authentication = false
+  
+  admin_ssh_key {
+    username   = var.admin_username
     public_key = tls_private_key.example_ssh.public_key_openssh
   }
 
