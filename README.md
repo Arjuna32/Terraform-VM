@@ -1,4 +1,4 @@
-# <center>READ ME
+# <center>READ ME (Amaan Usmani)
 # one time setup: 
 * Follow the instructions on one of the websites to install terraform
   * [How to install terraform in Windows with Bash](https://docs.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash)
